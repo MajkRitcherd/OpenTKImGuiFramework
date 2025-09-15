@@ -11,7 +11,7 @@ namespace BasicDemo
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 ClientSize = new OpenTK.Mathematics.Vector2i(800, 600),
-                Title = "ChimeraVerse"
+                Title = "Basic demo app"
             };
 
             using (var window = new OpenTKWindow(gameWindowSettings, nativeWindowSettings, true))
