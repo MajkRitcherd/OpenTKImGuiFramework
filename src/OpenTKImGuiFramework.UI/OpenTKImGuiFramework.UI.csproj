@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
+    <PackageReference Include="OpenTK.Graphics" Version="4.9.4" />
+    <PackageReference Include="OpenTK.Windowing.Desktop" Version="4.9.4" />
+  </ItemGroup>
+
 </Project>
