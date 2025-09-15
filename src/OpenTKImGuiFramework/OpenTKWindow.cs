@@ -32,6 +32,12 @@ namespace OpenTKImGuiFramework.Core
                 InitUI();
         }
 
+        public override void Dispose()
+        {
+            ImGuiUI?.Dispose();
+            base.Dispose();
+        }
+
         /// <summary>
         /// Gets ImGui UI.
         /// </summary>
@@ -70,6 +76,9 @@ namespace OpenTKImGuiFramework.Core
                 {
                     case DebugSeverity.DontCare:
                         Console.WriteLine($"[DontCare] [{source}] {message}");
+                        break;
+
+                    case DebugSeverity.DebugSeverityNotification:
                         break;
 
                     case DebugSeverity.DebugSeverityHigh:

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\OpenTKImGuiFramework\OpenTKImGuiFramework.csproj" />
+    <ProjectReference Include="..\..\OpenTKImGuiFramework.Core\OpenTKImGuiFramework.csproj" />
   </ItemGroup>
 
 </Project>
