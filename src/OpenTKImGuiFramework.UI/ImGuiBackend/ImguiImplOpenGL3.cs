@@ -419,7 +419,7 @@ namespace Dear_ImGui_Sample.Backends
                 varying vec4 Frag_Color;
                 void main()
                 {
-                    gl_FragColor = Frag_Color * texture2D(Texture, Frag_UV.st);
+                    gl_FragColor = Frag_Color * texture(Texture, Frag_UV.st);
                 }
                 """;
 
@@ -431,7 +431,7 @@ namespace Dear_ImGui_Sample.Backends
                 out vec4 Out_Color;
                 void main()
                 {
-                    Out_Color = Frag_Color * texture2D(Texture, Frag_UV.st);
+                    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
                 }
                 """;
 
@@ -444,7 +444,7 @@ namespace Dear_ImGui_Sample.Backends
                 layout(location = 0) out vec4 Out_Color;
                 void main()
                 {
-                    Out_Color = Frag_Color * texture2D(Texture, Frag_UV.st);
+                    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
                 }
                 """;
 
@@ -456,7 +456,7 @@ namespace Dear_ImGui_Sample.Backends
                 layout(location = 0) out vec4 Out_Color;
                 void main()
                 {
-                    Out_Color = Frag_Color * texture2D(Texture, Frag_UV.st);
+                    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
                 }
                 """;
 

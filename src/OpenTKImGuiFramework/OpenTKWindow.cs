@@ -121,14 +121,14 @@ namespace OpenTKImGuiFramework.Core
             ImGui.NewFrame();
 
             ImGui.DockSpaceOverViewport();
-
             ImGui.ShowDemoWindow();
-
             ImGui.Render();
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-            ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+            
             GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
             GL.ClearColor(new Color4(0, 32, 48, 255));
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+
+            ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
 
             if (ImGui.GetIO().ConfigFlags.HasFlag(ImGuiConfigFlags.ViewportsEnable))
             {
