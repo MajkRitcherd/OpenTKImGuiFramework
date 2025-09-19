@@ -79,6 +79,7 @@ namespace OpenTKImGuiFramework.Core
         {
             base.OnRenderFrame(args);
             OnRenderFrameAction?.Invoke(args);
+            SwapBuffers();
         }
 
         /// <inheritdoc/>
