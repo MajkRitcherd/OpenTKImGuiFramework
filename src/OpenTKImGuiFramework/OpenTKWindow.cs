@@ -1,8 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using Dear_ImGui_Sample.Backends;
-using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTKImGuiFramework.UI;
@@ -18,19 +15,51 @@ namespace OpenTKImGuiFramework.Core
         /// </summary>
         /// <param name="gameWindowSettings">Settings of game window.</param>
         /// <param name="nativeWindowSettings">Settings of a window.</param>
-        /// <param name="useUI">Whether or not to use ImGui UI.</param>
-        public OpenTKWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, bool useUI = false)
+        /// <param name="useImGuiUI">Whether or not to use ImGui UI.</param>
+        public OpenTKWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, bool useImGuiUI = false)
             : base(gameWindowSettings, nativeWindowSettings)
         {
-            _useUI = useUI;
+            _useUI = useImGuiUI;
 
+            if (_useUI)
+                ImGuiUI = new ImGuiUI(this);
+
+#if DEBUG
             GL.DebugMessageCallback(WindowDebugProcedure, IntPtr.Zero);
             GL.Enable(EnableCap.DebugOutput);
             GL.Enable(EnableCap.DebugOutputSynchronous);
-
-            if (_useUI)
-                InitUI();
+#endif
         }
+
+        /// <summary>
+        /// Action to run during <see cref="OnLoad"/> method.
+        /// </summary>
+        public event Action? OnLoadAction;
+
+        /// <summary>
+        /// Action to run during <see cref="OnRenderFrame(FrameEventArgs)"/> method.
+        /// </summary>
+        public event Action<FrameEventArgs>? OnRenderFrameAction;
+
+        /// <summary>
+        /// Action to run during <see cref="OnResize(ResizeEventArgs)"/> method.
+        /// </summary>
+        public event Action<ResizeEventArgs>? OnResizeFrameAction;
+
+        /// <summary>
+        /// Action to run during <see cref="OnUnload"/> method.
+        /// </summary>
+        public event Action? OnUnloadAction;
+
+        /// <summary>
+        /// Action to run during <see cref="OnUpdateFrame(FrameEventArgs)"/> method.
+        /// </summary>
+        public event Action<FrameEventArgs>? OnUpdateFrameAction;
+
+        /// <summary>
+        /// Gets ImGui UI.
+        /// </summary>
+        public ImGuiUI? ImGuiUI { get; private set; }
 
         public override void Dispose()
         {
@@ -38,17 +67,39 @@ namespace OpenTKImGuiFramework.Core
             base.Dispose();
         }
 
-        /// <summary>
-        /// Gets ImGui UI.
-        /// </summary>
-        public ImGuiUI? ImGuiUI { get; private set; }
+        /// <inheritdoc/>
+        protected override void OnLoad()
+        {
+            base.OnLoad();
+            OnLoadAction?.Invoke();
+        }
 
         /// <inheritdoc/>
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
-            RenderUI();
-            SwapBuffers();
+            OnRenderFrameAction?.Invoke(args);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnResize(ResizeEventArgs args)
+        {
+            base.OnResize(args);
+            OnResizeFrameAction?.Invoke(args);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnUnload()
+        {
+            base.OnUnload();
+            OnUnloadAction?.Invoke();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnUpdateFrame(FrameEventArgs args)
+        {
+            base.OnUpdateFrame(args);
+            OnUpdateFrameAction?.Invoke(args);
         }
 
         /// <summary>
@@ -97,44 +148,6 @@ namespace OpenTKImGuiFramework.Core
                         Console.WriteLine($"[default] [{source}] {message}");
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Initializes an ImGui UI.
-        /// </summary>
-        private void InitUI()
-        {
-            ImGuiUI = new ImGuiUI(this);
-        }
-
-        /// <summary>
-        /// Renders the ImGui UI to the window.
-        /// </summary>
-        private void RenderUI()
-        {
-            if (!_useUI)
-                return;
-
-            ImguiImplOpenGL3.NewFrame();
-            ImguiImplOpenTK4.NewFrame();
-            ImGui.NewFrame();
-
-            ImGui.DockSpaceOverViewport();
-            ImGui.ShowDemoWindow();
-            ImGui.Render();
-            
-            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
-            GL.ClearColor(new Color4(0, 32, 48, 255));
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-
-            ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
-
-            if (ImGui.GetIO().ConfigFlags.HasFlag(ImGuiConfigFlags.ViewportsEnable))
-            {
-                ImGui.UpdatePlatformWindows();
-                ImGui.RenderPlatformWindowsDefault();
-                Context.MakeCurrent();
             }
         }
     }
