@@ -6,6 +6,9 @@ using OpenTKImGuiFramework.UI;
 
 namespace OpenTKImGuiFramework.Core
 {
+    /// <summary>
+    /// Implementation of <see cref="GameWindow"/> with the option to display ImGui UI and debugging, if using DEBUG.
+    /// </summary>
     public class OpenTKWindow : GameWindow
     {
         private readonly bool _useUI;
@@ -61,6 +64,7 @@ namespace OpenTKImGuiFramework.Core
         /// </summary>
         public ImGuiUI? ImGuiUI { get; private set; }
 
+        /// <inheritdoc/>
         public override void Dispose()
         {
             ImGuiUI?.Dispose();

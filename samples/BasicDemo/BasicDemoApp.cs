@@ -14,7 +14,7 @@ namespace BasicDemo
                 Title = "Basic demo app"
             };
 
-            using (var window = new OpenTKWindow(gameWindowSettings, nativeWindowSettings, true))
+            using (var window = new SimpleWindow(gameWindowSettings, nativeWindowSettings, true))
             {
                 window.Run();
             }
