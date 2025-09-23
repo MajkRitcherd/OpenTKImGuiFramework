@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTKImGuiFramework.Core;
+using OpenTKImGuiFramework.UI;
 
 namespace BasicDemo
 {
@@ -12,16 +13,18 @@ namespace BasicDemo
     /// </summary>
     internal class SimpleWindow : OpenTKWindow
     {
+        private ImGuiUI _imGui;
+
         /// <summary>
         /// Basic implementation of the <see cref="OpenTKWindow"/>.
         /// </summary>
         /// <param name="gameWindowSettings">Game window settings.</param>
         /// <param name="nativeWindowSettings">Native window settings.</param>
-        /// <param name="useImGuiUI">Whether or not to use ImGui UI.</param>
-        public SimpleWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, bool useImGuiUI = false)
-            : base(gameWindowSettings, nativeWindowSettings, useImGuiUI)
+        public SimpleWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
-            OnRenderFrameAction += Render;
+            _imGui = new ImGuiUI(this);
+            OnRenderFrameAction += RenderAction;
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace BasicDemo
         /// Called from <see cref="OpenTKWindow.OnRenderFrame(FrameEventArgs)"/> method and registered in the constructor of this class.
         /// </summary>
         /// <param name="args"></param>
-        private void Render(FrameEventArgs args)
+        private void RenderAction(FrameEventArgs args)
         {
             RenderScene();
             RenderUI();
@@ -51,7 +54,7 @@ namespace BasicDemo
         /// </summary>
         private void RenderUI()
         {
-            ImGuiUI?.BeginRender(this);
+            _imGui.BeginRender(this);
 
             var dockspaceID = ImGui.GetID("DockSpace");
             var windowFlags = ImGuiWindowFlags.NoDocking;
@@ -78,7 +81,7 @@ namespace BasicDemo
             ImGui.End();
             ImGui.ShowDemoWindow();
 
-            ImGuiUI?.EndRender(this);
+            _imGui.EndRender(this);
         }
     }
 }

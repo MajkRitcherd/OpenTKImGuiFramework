@@ -2,7 +2,6 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTKImGuiFramework.UI;
 
 namespace OpenTKImGuiFramework.Core
 {
@@ -11,22 +10,14 @@ namespace OpenTKImGuiFramework.Core
     /// </summary>
     public class OpenTKWindow : GameWindow
     {
-        private readonly bool _useUI;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenTKWindow"/> class.
         /// </summary>
         /// <param name="gameWindowSettings">Settings of game window.</param>
         /// <param name="nativeWindowSettings">Settings of a window.</param>
-        /// <param name="useImGuiUI">Whether or not to use ImGui UI.</param>
-        public OpenTKWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, bool useImGuiUI = false)
+        public OpenTKWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
         {
-            _useUI = useImGuiUI;
-
-            if (_useUI)
-                ImGuiUI = new ImGuiUI(this);
-
 #if DEBUG
             GL.DebugMessageCallback(WindowDebugProcedure, IntPtr.Zero);
             GL.Enable(EnableCap.DebugOutput);
@@ -58,18 +49,6 @@ namespace OpenTKImGuiFramework.Core
         /// Action to run during <see cref="OnUpdateFrame(FrameEventArgs)"/> method.
         /// </summary>
         public event Action<FrameEventArgs>? OnUpdateFrameAction;
-
-        /// <summary>
-        /// Gets ImGui UI.
-        /// </summary>
-        public ImGuiUI? ImGuiUI { get; private set; }
-
-        /// <inheritdoc/>
-        public override void Dispose()
-        {
-            ImGuiUI?.Dispose();
-            base.Dispose();
-        }
 
         /// <inheritdoc/>
         protected override void OnLoad()

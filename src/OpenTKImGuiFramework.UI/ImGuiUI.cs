@@ -9,7 +9,7 @@ namespace OpenTKImGuiFramework.UI
     /// </summary>
     public class ImGuiUI : IDisposable
     {
-        private ImGuiIOPtr _imGuiIO;
+        private readonly ImGuiIOPtr _imGuiIO;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImGuiUI"/> class.
@@ -19,8 +19,22 @@ namespace OpenTKImGuiFramework.UI
         {
             ImGui.CreateContext();
             _imGuiIO = ImGui.GetIO();
+            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
+            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;
+            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
 
-            ImGuiInit(nativeWindow);
+            ImGui.StyleColorsDark();
+
+            ImGuiStylePtr style = ImGui.GetStyle();
+            if ((_imGuiIO.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
+            {
+                style.WindowRounding = 0.0f;
+                style.Colors[(int)ImGuiCol.WindowBg].W = 1.0f;
+            }
+
+            ImguiImplOpenTK4.Init(nativeWindow);
+            ImguiImplOpenGL3.Init();
         }
 
         /// <summary>
@@ -56,31 +70,6 @@ namespace OpenTKImGuiFramework.UI
                 ImGui.RenderPlatformWindowsDefault();
                 nativeWindow.Context.MakeCurrent();
             }
-        }
-
-        /// <summary>
-        /// Initializes the ImGui.
-        /// </summary>
-        /// <param name="nativeWindow">Window to bind UI with.</param>
-        private void ImGuiInit(NativeWindow nativeWindow)
-        {
-            ImGui.CreateContext();
-            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
-            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;
-            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-            _imGuiIO.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
-
-            ImGui.StyleColorsDark();
-
-            ImGuiStylePtr style = ImGui.GetStyle();
-            if ((_imGuiIO.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
-            {
-                style.WindowRounding = 0.0f;
-                style.Colors[(int)ImGuiCol.WindowBg].W = 1.0f;
-            }
-
-            ImguiImplOpenTK4.Init(nativeWindow);
-            ImguiImplOpenGL3.Init();
         }
     }
 }
